@@ -35,12 +35,7 @@ var marshawn = new ImageSurface({
   classes: ['backfaceVisibility']
 });
 
-var sherman = new ImageSurface({
-  size: [276, 395],
-  content: 'images/sherman.png',
-  classes: ['backfaceVisibility']
 
-});
 
 var wilson = new ImageSurface({
   size: [222, 395],
@@ -56,8 +51,10 @@ var kam = new ImageSurface({
 
 });
 
+var peteSize = [227/1.5, 292/1.5];
+
 var pete = new ImageSurface({
-  size: [227, 292],
+  size: peteSize,
   content: 'images/pete.png',
   classes: ['backfaceVisibility']
 
@@ -79,27 +76,45 @@ var skittles = new ImageSurface({
 
 });
 
-var hellaSkittles = [];
-var skittle;
 
-for (var i = 0; i < 100; i++) {
-  skittle = new ImageSurface({
-    size: [100, 80],
-    content: 'images/skittles.png',
-    classes: ['backfaceVisibility']
-  });
-  hellaSkittles.push(skittle);
-}
+// FLAG FOR LATER
+// var flag = new ImageSurface({
+// 	size: [435,292],
+// 	content: 'images/flag.png',
+// })
 
-// pete 
 
-var peteYelling = new Modifier({
-  origin: [0, 1],
-  align: [0, 1],
-  // transform: function() {
-  //   return Transform.rotateY(-.0008 * (Date.now() - initialTime));
-  // }
+
+
+
+
+// pete shit
+
+
+var modifier = new Modifier({
+	origin: [0,1],
+	transform: function ()  { 
+		return Transform.translate(Math.sin(0.002 * Date.now()) * window.innerWidth / 2, 0)
+
+			}
+
 });
+
+var peteSlider = new Modifier({
+  align: [0, 1],
+  origin: [0, 1],
+  transform: function() {
+    return Transform.translate(Math.sin(0.0005 * Date.now()) * (window.innerWidth), 0)
+    // return Transform.rotateY(.002 * (Date.now() - initialTime));
+  }
+});
+
+
+
+
+mainContext.add(peteSlider).add(pete);
+
+
 
 
 // skittles orbiting marshawn
@@ -114,8 +129,13 @@ var center = new Modifier({
 
 
 
+
 var centerNode = mainContext.add(center);
 centerNode.add(marshawn);
+
+var translate = new Modifier({
+  transform: Transform.translate(300, 0, 0)
+});
 
 var rotate = new Modifier({
   transform: function() {
@@ -123,9 +143,6 @@ var rotate = new Modifier({
   }
 });
 
-var translate = new Modifier({
-  transform: Transform.translate(300, 0, 0)
-});
 
 
 var initialTime = Date.now();
@@ -172,15 +189,17 @@ wilson.on('click', function() {
 // bouncing richard sherman 
 
 
-var newSherman = new ImageSurface({
+var sherman = new ImageSurface({
   size: [276, 395],
   content: 'images/sherman.png',
 });
 
 
 var shermanDraggable = new Draggable();
-newSherman.pipe(shermanDraggable);
-var modifier = new Modifier({
+sherman.pipe(shermanDraggable);
+
+
+var bouncingModifier = new Modifier({
         align: [0.8, 1],
         origin: [0, .8],
         transform: Transform.translate(0,-240,-100)
@@ -189,19 +208,24 @@ var modifier = new Modifier({
     Transitionable.registerMethod('spring', SpringTransition);
     var transition = {
         method: "spring",
-        period: 1000,
-        dampingRatio: .1,
+        period: 400,
+        dampingRatio: .2,
         velocity: 0
 
     }
 
-newSherman.on("click", function(){
-    modifier.setTransform(Transform.translate(0,0,0),transition);
+
+
+sherman.on("click", function(){
+    bouncingModifier.setTransform(Transform.translate(0,0,0),transition, 
+    	function() {
+    		bouncingModifier.setTransform(Transform.translate(0,-240,-100), transition)
+    	});
 });
 
 
 
-    mainContext.add(shermanDraggable).add(modifier).add(newSherman);
+    mainContext.add(shermanDraggable).add(bouncingModifier).add(sherman);
 
 
 // draggable Kam
@@ -212,10 +236,8 @@ kam.pipe(draggable);
 
 // mainContext.add(draggable).add(kam);
 
-mainContext.add(peteYelling).add(pete);
+// mainContext.add(peteYelling).add(pete);
 mainContext.add(wilsonDraggable).add(dynamicRuss).add(wilson);
-mainContext.add(hellaSkittles);
-// mainContext.add(rainingSkittlesModifier).add(hellaSkittles);
 
 
 
