@@ -104,7 +104,7 @@ var peteSlider = new Modifier({
   align: [0, 1],
   origin: [0, 1],
   transform: function() {
-    return Transform.translate(Math.sin(0.0005 * Date.now()) * (window.innerWidth), 0)
+    return Transform.translate(Math.sin(0.0003 * Date.now()) * (window.innerWidth), 0)
     // return Transform.rotateY(.002 * (Date.now() - initialTime));
   }
 });
